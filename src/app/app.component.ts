@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {WebsocketsService} from './services/websockets.service';
+import {ChatService} from './services/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'basic';
+
+  constructor(
+    public wsServices: WebsocketsService) {
+  }
 }
