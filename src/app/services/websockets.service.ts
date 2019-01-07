@@ -8,10 +8,11 @@ import { User } from '../models/user';
 export class WebsocketsService {
 
   public socketStatus = false;
-  public user: User;
+  public user: User = null;
 
   constructor( private socket: Socket) {
     this.checkStatus();
+    this.loadFromStorage();
   }
 
   checkStatus() {
@@ -26,7 +27,7 @@ export class WebsocketsService {
     });
   }
 
-  emit( event: string, payload?: any, callback?: Function ){
+  emit( event: string, payload?: any, callback?: Function ) {
     console.log('Emitting...', event);
     this.socket.emit(event, payload, callback);
   }
@@ -36,9 +37,30 @@ export class WebsocketsService {
     return this.socket.fromEvent( event );
   }
 
+  getUser() {
+    return this.user;
+  }
+
   loginWS( name: string) {
-    this.socket.emit('config-user', { name }, ( resp ) => {
-      console.log(resp);
+
+    return new Promise( (resolve, reject) =>{
+      this.emit('config-user', { name }, ( resp ) => {
+        this.user = new User(name);
+        this.saveOnStorage();
+        resolve();
+      });
     });
+
+  }
+
+  saveOnStorage() {
+    localStorage.setItem( 'user', JSON.stringify(this.user) );
+  }
+
+  loadFromStorage() {
+    if ( localStorage.getItem( 'user') ) {
+      this.user = JSON.parse( localStorage.getItem( 'user') );
+      this.loginWS( this.user.name );
+    }
   }
 }

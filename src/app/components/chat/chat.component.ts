@@ -13,12 +13,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   messageSubscription: Subscription;
   element: HTMLElement;
   messages: any[] = [];
+  rec = false;
 
   constructor( public chatService: ChatService) { }
 
   ngOnInit() {
     this.element = document.getElementById('messages-chat');
     this.messageSubscription = this.chatService.listenNewMessages().subscribe( msg => {
+      this.rec = true;
       this.messages.push(msg);
       setTimeout( () => {
         this.element.scrollTop = this.element.scrollHeight;
@@ -35,6 +37,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
     this.chatService.sendMessage(this.text);
+    this.rec = false;
     this.text = '';
   }
 

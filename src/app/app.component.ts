@@ -7,9 +7,18 @@ import {ChatService} from './services/chat.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   constructor(
-    public wsServices: WebsocketsService) {
+    public wsServices: WebsocketsService,
+    public chatService: ChatService) {
   }
+
+  ngOnInit() {
+    this.chatService.getPrivateMessages().subscribe( msg => {
+      console.log(msg);
+    });
+  }
+
+
 }
