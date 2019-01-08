@@ -18,8 +18,9 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.wsService.loginWS( this.name ).then( () => {
-      this.router.navigateByUrl('messages');
+    this.wsService.loginWS( this.name )
+      .then( () => {
+        this.router.navigateByUrl('/messages');
     });
   }
 
